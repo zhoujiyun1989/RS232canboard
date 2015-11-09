@@ -1,0 +1,4 @@
+--cpu Cortex-M0 ".\debuginflash\core_cm0.o" ".\debuginflash\system_lpc11xx.o" ".\debuginflash\startup_lpc11xx.o" ".\debuginflash\main.o" ".\debuginflash\buffer.o" ".\debuginflash\can_api.o" --strict --scatter ".\LPC1100.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\DebugInFlash\canboard.map" -o ".\DebugInFlash\canboard.axf"

@@ -1,0 +1,25 @@
+---- rcv_byte_buffer Matches (13 in 3 files) ----
+Buffer.c (user_code):T_BYTE_BUFFER  rcv_byte_buffer = {
+Buffer.h (user_code):extern T_BYTE_BUFFER  rcv_byte_buffer;
+Main.c (user_code):										put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
+Main.c (user_code):											put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
+Main.c (user_code):					if(((rcv_byte_buffer.next+rcv_byte_buffer.size-rcv_byte_buffer.oldest)%rcv_byte_buffer.size) >= 13)
+Main.c (user_code):							get_byte_buffer(&rcv_byte_buffer,&byte_send);
+Main.c (user_code):						get_byte_buffer(&rcv_byte_buffer,&byte_send);
+Main.c (user_code):							get_byte_buffer(&rcv_byte_buffer,&byte_send);
+Main.c (user_code):							rcv_byte_buffer.oldest = rcv_byte_buffer.next;
+---- rcv_byte_buffer Matches (13 in 3 files) ----
+Buffer.c (user_code):T_BYTE_BUFFER  rcv_byte_buffer = {
+Buffer.h (user_code):extern T_BYTE_BUFFER  rcv_byte_buffer;
+Main.c (user_code):										put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
+Main.c (user_code):											put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
+Main.c (user_code):					if(((rcv_byte_buffer.next+rcv_byte_buffer.size-rcv_byte_buffer.oldest)%rcv_byte_buffer.size) >= 13)
+Main.c (user_code):							get_byte_buffer(&rcv_byte_buffer,&byte_send);
+Main.c (user_code):						get_byte_buffer(&rcv_byte_buffer,&byte_send);
+Main.c (user_code):							get_byte_buffer(&rcv_byte_buffer,&byte_send);
+Main.c (user_code):							rcv_byte_buffer.oldest = rcv_byte_buffer.next;
+---- get_can_buffer Matches (4 in 3 files) ----
+Buffer.c (user_code):** Function name:       get_can_buffer
+Buffer.c (user_code):int get_can_buffer(T_CAN_BUFFER* pbuffer, CAN_MSG_OBJ* pframe)
+Buffer.h (user_code):extern int get_can_buffer(T_CAN_BUFFER* pbuffer, CAN_MSG_OBJ* pframe);
+Main.c (user_code):				if(get_can_buffer(&rcv_can_buffer,&msg_obj))
