@@ -9,7 +9,7 @@
 #ifndef __BUFFER_H 
 #define __BUFFER_H
 #include "CAN_API.h"
-#define		CAN_BUFFER_SIZE		20
+#define		CAN_BUFFER_SIZE		100
 #define		BYTE_BUFFER_SIZE	200
 #define		ARRY_BUFFER_SIZE	200
 

@@ -1,25 +1,45 @@
----- rcv_byte_buffer Matches (13 in 3 files) ----
+---- receiveuartframe Matches (8 in 2 files) ----
+Canboard.htm (debuginflash):<LI>Call Chain = __rt_entry_main &rArr; main &rArr; receiveuartframe &rArr; __ARM_common_switch8
+Canboard.htm (debuginflash):<P><STRONG><a name="[48]"></a>receiveuartframe</STRONG> (Thumb, 418 bytes, Stack size 24 bytes, main.o(.text))
+Canboard.htm (debuginflash):<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = receiveuartframe &rArr; __ARM_common_switch8
+Canboard.htm (debuginflash):<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = main &rArr; receiveuartframe &rArr; __ARM_common_switch8
+Canboard.htm (debuginflash):<LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;receiveuartframe
+Canboard.htm (debuginflash):<BR>[Called By]<UL><LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;receiveuartframe
+Main.c (user_code):int receiveuartframe(uint8_t uartreceive, struct uartframe* puartframereceive, enum State* penum_UartHandleState)
+Main.c (user_code):			receiveuartframe(byte_send, &uartframereceive, &enum_UartHandleState);
+---- rcv_byte_buffer Matches (15 in 3 files) ----
 Buffer.c (user_code):T_BYTE_BUFFER  rcv_byte_buffer = {
 Buffer.h (user_code):extern T_BYTE_BUFFER  rcv_byte_buffer;
-Main.c (user_code):										put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
-Main.c (user_code):											put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
-Main.c (user_code):					if(((rcv_byte_buffer.next+rcv_byte_buffer.size-rcv_byte_buffer.oldest)%rcv_byte_buffer.size) >= 13)
-Main.c (user_code):							get_byte_buffer(&rcv_byte_buffer,&byte_send);
-Main.c (user_code):						get_byte_buffer(&rcv_byte_buffer,&byte_send);
-Main.c (user_code):							get_byte_buffer(&rcv_byte_buffer,&byte_send);
-Main.c (user_code):							rcv_byte_buffer.oldest = rcv_byte_buffer.next;
----- rcv_byte_buffer Matches (13 in 3 files) ----
-Buffer.c (user_code):T_BYTE_BUFFER  rcv_byte_buffer = {
-Buffer.h (user_code):extern T_BYTE_BUFFER  rcv_byte_buffer;
-Main.c (user_code):										put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
-Main.c (user_code):											put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
-Main.c (user_code):					if(((rcv_byte_buffer.next+rcv_byte_buffer.size-rcv_byte_buffer.oldest)%rcv_byte_buffer.size) >= 13)
-Main.c (user_code):							get_byte_buffer(&rcv_byte_buffer,&byte_send);
-Main.c (user_code):						get_byte_buffer(&rcv_byte_buffer,&byte_send);
-Main.c (user_code):							get_byte_buffer(&rcv_byte_buffer,&byte_send);
-Main.c (user_code):							rcv_byte_buffer.oldest = rcv_byte_buffer.next;
----- get_can_buffer Matches (4 in 3 files) ----
-Buffer.c (user_code):** Function name:       get_can_buffer
-Buffer.c (user_code):int get_can_buffer(T_CAN_BUFFER* pbuffer, CAN_MSG_OBJ* pframe)
-Buffer.h (user_code):extern int get_can_buffer(T_CAN_BUFFER* pbuffer, CAN_MSG_OBJ* pframe);
-Main.c (user_code):				if(get_can_buffer(&rcv_can_buffer,&msg_obj))
+Main.c (user_code):					put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
+Main.c (user_code):					put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
+Main.c (user_code):		if(((rcv_byte_buffer.next+rcv_byte_buffer.size-rcv_byte_buffer.oldest)%rcv_byte_buffer.size) >= 13)
+Main.c (user_code):				get_byte_buffer(&rcv_byte_buffer,&byte_send);
+Main.c (user_code):			get_byte_buffer(&rcv_byte_buffer,&byte_send);
+Main.c (user_code):				get_byte_buffer(&rcv_byte_buffer,&byte_send);
+Main.c (user_code):			rcv_byte_buffer.oldest = rcv_byte_buffer.next;
+Main.c (user_code):		if(is_byte_buffer_empty(&rcv_byte_buffer)==0)
+Main.c (user_code):			get_byte_buffer(&rcv_byte_buffer,&byte_send);
+---- puartframereceive Matches (28 in 1 files) ----
+Main.c (user_code):int receiveuartframe(uint8_t uartreceive, struct uartframe* puartframereceive, enum State* penum_UartHandleState)
+Main.c (user_code):				(*puartframereceive).header[0] = uartreceive;
+Main.c (user_code):				(*puartframereceive).header[1] = uartreceive;
+Main.c (user_code):			(*puartframereceive).cmd= uartreceive;
+Main.c (user_code):			if(((*puartframereceive).cmd>=1)||((*puartframereceive).cmd<=3))
+Main.c (user_code):				(*puartframereceive).leng[i]= uartreceive;
+Main.c (user_code):				(*puartframereceive).retain = uartreceive;
+Main.c (user_code):			if(i>=((*puartframereceive).leng[0]*255 + (*puartframereceive).leng[1]))
+Main.c (user_code):				(*puartframereceive).data = receivedata;
+Main.c (user_code):			(*puartframereceive).check = (*puartframereceive).header[0]^\
+Main.c (user_code):							(*puartframereceive).header[1]^\
+Main.c (user_code):							(*puartframereceive).cmd^\
+Main.c (user_code):							(*puartframereceive).leng[0]^\
+Main.c (user_code):							(*puartframereceive).leng[1]^\
+Main.c (user_code):							(*puartframereceive).retain;
+Main.c (user_code):			for(i=0;i<(*puartframereceive).leng[0]*255 + (*puartframereceive).leng[1];i++)
+Main.c (user_code):			(*puartframereceive).check ^= (*puartframereceive).data[i];
+Main.c (user_code):			//uartSendByte((*puartframereceive).check);
+Main.c (user_code):			if((*puartframereceive).check ==uartreceive)
+Main.c (user_code):				switch((*puartframereceive).cmdhandle)
+Main.c (user_code):					id = (id<<8) | (*puartframereceive).data[i];
+Main.c (user_code):				msg_obj.dlc = (*puartframereceive).data[4];
+Main.c (user_code):					msg_obj.data[i] = (*puartframereceive).data[5+i];

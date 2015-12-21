@@ -415,6 +415,11 @@
               <FileType>1</FileType>
               <FilePath>.\USER_CODE\buffer.c</FilePath>
             </File>
+            <File>
+              <FileName>E2PROM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USER_CODE\E2PROM.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -837,6 +842,11 @@
               <FileName>buffer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\USER_CODE\buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>E2PROM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USER_CODE\E2PROM.c</FilePath>
             </File>
           </Files>
         </Group>

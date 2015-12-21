@@ -11,6 +11,11 @@
 #include "buffer.h"
 
 /*********************************************************************************************************
+  flash读写，配置CAN总线
+*********************************************************************************************************/
+//0-3设置为CAN的波特率
+
+/*********************************************************************************************************
   宏定义
 *********************************************************************************************************/
 
@@ -219,7 +224,7 @@ void uartInit (void)
     LPC_UART->FCR  = 0x87;                                              /* 使能FIFO，设置8个字节触发点  */
     
     NVIC_EnableIRQ(UART_IRQn);                                          /* 使能UART中断，并配置优先级   */
-    NVIC_SetPriority(UART_IRQn, 1);
+    NVIC_SetPriority(UART_IRQn, 2);
 
     LPC_UART->IER  = 0x01;                                              /* 使能接收中断                 */
 }
@@ -316,10 +321,13 @@ int senduartframe(struct uartframe uartframesendvar)
 	uartSendByte(uartframesendvar.check);
 }
 
-int receiveuartframe(uint8_t uartreceive, struct uartframe* puartframereceive, enum State* penum_UartHandleState)
+int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, enum State* penum_UartHandleState)
 {
 	int static i = 0;
 	uint32_t id = 0;
+	uint32_t can_speed = 0;
+	uint8_t  ucErr = 0;
+	uint8_t  data[256],temp[256];
 	
 	switch(*penum_UartHandleState)
 	{
@@ -393,27 +401,67 @@ int receiveuartframe(uint8_t uartreceive, struct uartframe* puartframereceive, e
 
 			if((*puartframereceive).check ==uartreceive)
 			{
-				id = 0;
-				for(i=0;i<4;i++)
+				switch(puartframereceive->cmd)
 				{
-					id = (id<<8) | (*puartframereceive).data[i];
+					//接收的帧数据
+					case 0:
+					{
+						id = 0;
+						for(i=0;i<4;i++)
+						{
+							id = (id<<8) | (*puartframereceive).data[i];
+						}
+						//发送的ID是否带有帧信息
+						//id = (id&0x1FFFFFFF)|(TID_STD_EXT<<29)|(TID_DAT_RTR<<30);
+						//msg_obj.msgobj = 2;
+						msg_obj.mode_id = id;
+						msg_obj.dlc = (*puartframereceive).data[4];
+						for(i=0;i<msg_obj.dlc;i++)
+						{
+							msg_obj.data[i] = (*puartframereceive).data[5+i];
+						}
+						(*rom)->pCANAPI->can_transmit(&msg_obj);	
+					}
+					case 1:
+					{
+						uartSendByte(0x90);
+						uartSendByte(0x90);
+						for(i=0;i<4;i++)
+						{
+							can_speed = (can_speed<<8) | (*puartframereceive).data[i];
+							data[i] = (*puartframereceive).data[i];
+							temp[i] = 0;
+						}
+						for(i=4;i<256;i++)
+						{
+							data[i] = 0;
+							temp[i] = 0;
+						}
+						
+						ucErr = eepromWrite(0, data);
+						eepromRead(0, temp, 256);
+						uartSendByte(0x91);
+						uartSendByte(0x92);
+						if (ucErr == 0)
+						{
+							for (i = 0; i < 256; i++)
+							{
+								if (data[i] != temp[i])
+							    {
+									ucErr = 1;
+									uartSendByte(0x93);
+									uartSendByte(0x94);
+									break;
+							   	}
+							}
+						}
+					}
 				}
-				//发送的ID是否带有帧信息
-				//id = (id&0x1FFFFFFF)|(TID_STD_EXT<<29)|(TID_DAT_RTR<<30);
-				//msg_obj.msgobj = 2;
-				msg_obj.mode_id = id;
-				msg_obj.dlc = (*puartframereceive).data[4];
-				for(i=0;i<msg_obj.dlc;i++)
-				{
-					msg_obj.data[i] = (*puartframereceive).data[5+i];
-				}
-				(*rom)->pCANAPI->can_transmit(&msg_obj);
+				*penum_UartHandleState = findhear;
+				i = 0;
+				break;
 			}
-			*penum_UartHandleState = findhear;
-			i = 0;
-			break;
 		}
-
 		default: 
 		{
 			*penum_UartHandleState = findhear;
