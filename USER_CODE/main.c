@@ -9,6 +9,8 @@
 #include "LPC11xx.h"
 #include "CAN_API.h"
 #include "buffer.h"
+#include "E2PROM.h"
+	
 
 /*********************************************************************************************************
   flash读写，配置CAN总线
@@ -34,12 +36,14 @@
 #define RID_CHECK						(RID&0x1fffffff)|(RID_STD_EXT<<29)|(RID_DAT_RTR<<30)
 #define RMASK 							0x00																		//接收0x00-0xFF的ID帧
 struct uartframe {
-	uint8_t header[2];
-	uint8_t cmd;
+	uint8_t start_symbol;
+	uint8_t fixation[2];
+	uint8_t protocol[2];
 	uint8_t leng[2];
-	uint8_t retain;
-	uint8_t *data;
-	uint8_t check;
+	uint8_t cmd;
+	uint8_t data[13];
+	uint8_t check[2];
+	uint8_t end_symbol;
 };
 enum State {
 	findhear = 0,
@@ -59,6 +63,8 @@ uint32_t     	GulNum;                                                    /* 串口
 struct uartframe uartframesend;
 struct uartframe uartframereceive;
 uint8_t	receivedata[13];
+uint8_t success_config[24] = {0x7E,0xFF,0x03,0xA0,0x21,0x00,0x0E,0x03,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x71,0xD5,0x7E}
+uint8_t fail_config[24] = {0x7E,0xFF,0x03,0xA0,0x21,0x00,0x0E,0x03,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x70,0xD4,0x7E}
 
 /*********************************************************************************************************
 ** Function name:       delay_ms
@@ -301,173 +307,262 @@ void UART_IRQHandler (void)
 
 int senduartframe(struct uartframe uartframesendvar)
 {
+	uint8_t* p_temp = (uint8_t*)uartframesendvar;
 	int i = 0;
-	uartSendByte(uartframesendvar.header[0]);
-	uartSendByte(uartframesendvar.header[1]);
-	uartSendByte(uartframesendvar.cmd);
-	uartSendByte(uartframesendvar.leng[0]);
-	uartSendByte(uartframesendvar.leng[1]);
-	uartSendByte(uartframesendvar.retain);
-	for(i=0;i<13;i++)
-		uartSendByte(uartframesendvar.data[i]);
-	uartframesendvar.check = uartframesendvar.header[0]^\
-							uartframesendvar.header[1]^\
-							uartframesendvar.cmd^\
-							uartframesendvar.leng[0]^\
-							uartframesendvar.leng[1]^\
-							uartframesendvar.retain;
-	for(i=0;i<13;i++)
-	uartframesendvar.check ^= uartframesendvar.data[i];
-	uartSendByte(uartframesendvar.check);
+	uartSendByte(0x7E);
+	//uartframe结构体总长度是24，去除首尾的7E
+	for(i=1;i<23;i++)
+	{
+		if((*(p_temp+i)>=0x00)&&(*(p_temp+i)<=0x20))
+		{
+			uartSendByte(0x7D);
+			uartSendByte(*(p_temp+i));
+		}
+		else
+			switch(*(p_temp+i))
+			{
+				case (0x7E):
+				{
+					uartSendByte(0x7D);
+					uartSendByte(0x5E);
+					break;
+				}
+				case (0x7D):
+				{
+					uartSendByte(0x7D);
+					uartSendByte(0x5D);
+					break;
+				}
+				default:
+				{
+					uartSendByte(*(p_temp+i));
+					break;
+				}
+			}
+	}
+	uartSendByte(0x7E);
 }
 
-int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, enum State* penum_UartHandleState)
+int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, uint8_t valid_7E, uint8_t convert_7D)
 {
-	int static i = 0;
+	int i = 0;
+	int static j = 1;
+	uint8_t check[2] = 0;
+	
 	uint32_t id = 0;
 	uint32_t can_speed = 0;
 	uint8_t  ucErr = 0;
 	uint8_t  data[256],temp[256];
 	
-	switch(*penum_UartHandleState)
+	uint8_t *p_temp = (uint8_t*)puartframereceive;
+	
+	switch(uartreceive)
 	{
-		case (findhear):
+		case (7E):
 		{
-			if(uartreceive==0xAA)
+			if((j==23)&&(p_temp[0]==0x7E)&&(p_temp[1]==0xFF)&&(p_temp[2]==0x03)&&(p_temp[3]==0xA0)&&(p_temp[4]==0x21)&&(p_temp[5]==0x00)&&(p_temp[6]==0x0D))
 			{
-				i = 1;
-				(*puartframereceive).header[0] = uartreceive;
-			}
-			else if(i==1 && uartreceive==0x75)
-			{
-				*penum_UartHandleState = cmdhandle;
-				(*puartframereceive).header[1] = uartreceive;
-				i = 0;
-			}
-			else
-				i = 0;
-			break;
-		}
-		
-		case (cmdhandle):
-		{
-			(*puartframereceive).cmd= uartreceive;
-			if(((*puartframereceive).cmd>=1)||((*puartframereceive).cmd<=3))
-				*penum_UartHandleState = lenhandle;
-			else
-				*penum_UartHandleState = findhear;
-			break;
-		}
-
-		case (lenhandle):
-		{
-			if(i<2)
-				(*puartframereceive).leng[i]= uartreceive;
-			else
-				(*puartframereceive).retain = uartreceive;
-			i++;
-			if(i>=3)
-			{
-				*penum_UartHandleState = dataread;
-				i = 0;
-			}
-			break;
-		}
-
-		case (dataread):
-		{
-			receivedata[i]= uartreceive;
-			i++;
-			if(i>=((*puartframereceive).leng[0]*255 + (*puartframereceive).leng[1]))
-			{
-				(*puartframereceive).data = receivedata;
-				*penum_UartHandleState = checkhandle;
-				i = 0;
-			}
-			break;
-		}
-		case (checkhandle):
-		{
-			(*puartframereceive).check = (*puartframereceive).header[0]^\
-							(*puartframereceive).header[1]^\
-							(*puartframereceive).cmd^\
-							(*puartframereceive).leng[0]^\
-							(*puartframereceive).leng[1]^\
-							(*puartframereceive).retain;
-			for(i=0;i<(*puartframereceive).leng[0]*255 + (*puartframereceive).leng[1];i++)
-			(*puartframereceive).check ^= (*puartframereceive).data[i];
-			//uartSendByte((*puartframereceive).check);
-			//uartSendByte(uartreceive);
-
-			if((*puartframereceive).check ==uartreceive)
-			{
-				switch(puartframereceive->cmd)
+				for(i=1,i<21,i++)
 				{
-					//接收的帧数据
-					case 0:
+					check[0] ^= p_temp[i];
+					check[1] += p_temp[i];
+				}
+				if((check[0]==p_temp[21])&&(check[1]==p_temp[22]))
+				{
+					//校验正确并且符合协议，开始解析数据
+					switch(p_temp[7])
 					{
-						id = 0;
-						for(i=0;i<4;i++)
+						case (1):
 						{
-							id = (id<<8) | (*puartframereceive).data[i];
-						}
-						//发送的ID是否带有帧信息
-						//id = (id&0x1FFFFFFF)|(TID_STD_EXT<<29)|(TID_DAT_RTR<<30);
-						//msg_obj.msgobj = 2;
-						msg_obj.mode_id = id;
-						msg_obj.dlc = (*puartframereceive).data[4];
-						for(i=0;i<msg_obj.dlc;i++)
-						{
-							msg_obj.data[i] = (*puartframereceive).data[5+i];
-						}
-						(*rom)->pCANAPI->can_transmit(&msg_obj);	
-					}
-					case 1:
-					{
-						uartSendByte(0x90);
-						uartSendByte(0x90);
-						for(i=0;i<4;i++)
-						{
-							can_speed = (can_speed<<8) | (*puartframereceive).data[i];
-							data[i] = (*puartframereceive).data[i];
-							temp[i] = 0;
-						}
-						for(i=4;i<256;i++)
-						{
-							data[i] = 0;
-							temp[i] = 0;
-						}
-						
-						ucErr = eepromWrite(0, data);
-						eepromRead(0, temp, 256);
-						uartSendByte(0x91);
-						uartSendByte(0x92);
-						if (ucErr == 0)
-						{
-							for (i = 0; i < 256; i++)
+							id = 0;
+							for(i=0;i<4;i++)
 							{
-								if (data[i] != temp[i])
-							    {
-									ucErr = 1;
-									uartSendByte(0x93);
-									uartSendByte(0x94);
-									break;
-							   	}
+								id = (id<<8) | p_temp[8+i];
 							}
+							//发送的ID是否带有帧信息
+							//id = (id&0x1FFFFFFF)|(TID_STD_EXT<<29)|(TID_DAT_RTR<<30);
+							//msg_obj.msgobj = 2;
+							msg_obj.mode_id = id;
+							msg_obj.dlc = p_temp[12];
+							for(i=0;i<msg_obj.dlc;i++)
+							{
+								msg_obj.data[i] = p_temp[13+i];
+							}
+							(*rom)->pCANAPI->can_transmit(&msg_obj);
+						}
+						case (2):
+						{
+							for(i=0;i<4;i++)
+							{
+								can_speed = (can_speed<<8) | p_temp[8+i];
+								data[i] = p_temp[8+i];
+								temp[i] = 0;
+							}
+							for(i=4;i<256;i++)
+							{
+								data[i] = 0;
+								temp[i] = 0;
+							}
+							
+							ucErr = eepromWrite(0, data);
+							eepromRead(0, temp, 256);
+							if (ucErr == 0)
+							{
+								for (i = 0; i < 256; i++)
+								{
+									if (data[i] != temp[i])
+								    {
+										ucErr = 1;
+										//uartSendStr("abcde",3)
+								   	}
+								}
+							}
+							if(ucErr == 0)
+							{
+								uartSendByte(0x7E);
+								//uartframe结构体总长度是24，去除首尾的7E
+								for(i=1;i<23;i++)
+								{
+									if((*(success_config+i)>=0x00)&&(*(success_config+i)<=0x20))
+									{
+										uartSendByte(0x7D);
+										uartSendByte(*(success_config+i));
+									}
+									else
+										switch(*(success_config+i))
+										{
+											case (0x7E):
+											{
+												uartSendByte(0x7D);
+												uartSendByte(0x5E);
+												break;
+											}
+											case (0x7D):
+											{
+												uartSendByte(0x7D);
+												uartSendByte(0x5D);
+												break;
+											}
+											default:
+											{
+												uartSendByte(*(success_config+i));
+												break;
+											}
+										}
+								}
+								uartSendByte(0x7E);
+							}
+							else
+							{
+								uartSendByte(0x7E);
+								//uartframe结构体总长度是24，去除首尾的7E
+								for(i=1;i<23;i++)
+								{
+									if((*(fail_config+i)>=0x00)&&(*(fail_config+i)<=0x20))
+									{
+										uartSendByte(0x7D);
+										uartSendByte(*(fail_config+i));
+									}
+									else
+										switch(*(fail_config+i))
+										{
+											case (0x7E):
+											{
+												uartSendByte(0x7D);
+												uartSendByte(0x5E);
+												break;
+											}
+											case (0x7D):
+											{
+												uartSendByte(0x7D);
+												uartSendByte(0x5D);
+												break;
+											}
+											default:
+											{
+												uartSendByte(*(fail_config+i));
+												break;
+											}
+										}
+								}
+								uartSendByte(0x7E);
+							}
+							break;
+						}
+						default:
+						{
+							break;
 						}
 					}
 				}
-				*penum_UartHandleState = findhear;
-				i = 0;
-				break;
 			}
-		}
-		default: 
-		{
-			*penum_UartHandleState = findhear;
-			i = 0;
+			valid_7E = 1;
+			j = 1;
+			*p_temp = 0x7E;
+			for(i=1;i<24;i++)
+			{
+				*(p_temp+i) = 0x00;
+			}
 			break;
 		}
+		
+		case (7D):
+		{
+			if(valid_7E)
+				convert_7D = 0x01;
+			else
+				convert_7D = 0x00;
+		}
+
+		default:
+		{
+			if(valid_7E)
+			{
+				if(convert_7D)
+				{
+					convert_7D = 0;
+					if(uartreceive>=0 && uartreceive<=0x20)
+						*(p_temp+(j++)) = uartreceive;
+					else
+						switch(uartreceive)
+						{
+							case (0x5E):
+							{
+								*(p_temp+(j++)) = 0x7E;
+								break;
+							}
+							case (0x5D):
+							{
+								*(p_temp+(j++)) = 0x7D;
+								break;
+							}
+							default:
+							{
+								valid_7E = 0;
+								break;
+							}
+						}
+				}
+				else
+				{
+					convert_7D = 0;
+					if((uartreceive>=0x21&&uartreceive<=0x7C)||(uartreceive>=0x7F&&uartreceive<=0xFF))
+						*(p_temp+(j++)) = uartreceive;
+					else
+						valid_7E = 0;
+				}
+			}
+			else
+			{
+				j = 1;
+				convert_7D = 0;
+			}
+		}
+	}
+	if(j>=24)
+	{
+		valid_7E = 0;
+		j = 1;
 	}
 }
 
@@ -486,6 +581,8 @@ int main(void)
 	int i= 0;
 	uint32_t id = 0, msg_id = 0;
 	uint8_t	byte_send;
+	uint8_t	valid_7E = 0;
+	uint8_t	convert_7D = 0;
 	uint8_t	senddata[13];
 	
 	SystemInit();                                                     //初始化目标板，切勿删除
@@ -507,12 +604,15 @@ int main(void)
 	{
 		if(get_can_buffer(&rcv_can_buffer,&msg_obj))
 		{
-			uartframesend.header[0] = 0xAA;
-			uartframesend.header[1] = 0x75;
+			uartframesend.start_symbol = 0x7E;
+			uartframesend.fixation = {0xFF,0x03};
+			uartframesend.protocol = {0xA0,0x21};
+			uartframesend.leng = {0x00,0x0D};
 			uartframesend.cmd = 0x01;
-			uartframesend.leng[0] = 0x00;
-			uartframesend.leng[1] = 0x0D;
-			uartframesend.retain = 0x00;
+			//uartframesend.data = {};
+			//uartframesend.check = {};
+			uartframesend.end_symbol = 0x7E;
+
 			
 			//msg_id = (msg_obj.mode_id&0x1fffffff)|(RID_STD_EXT<<29)|(RID_DAT_RTR<<30);
 			msg_id = (msg_obj.mode_id&0x1fffffff)|((msg_obj.msgobj)<<29);
@@ -535,6 +635,15 @@ int main(void)
 				}
 			}
 			uartframesend.data = &senddata[0];
+
+			uartframesend.check[0] = 0xFF^0x03^0xA0^0x21^0x00^0x0D^0x01;
+			uartframesend.check[1] = 0xFF+0x03+0xA0+0x21+0x00+0x0D+0x01;
+			for(i=0;i<13;i++)
+			{
+				uartframesend.check[0] ^= uartframesend.data[i];
+				uartframesend.check[1] += uartframesend.data[i];
+			}
+			
 			senduartframe(uartframesend);
 		}
 /*
@@ -571,7 +680,7 @@ int main(void)
 		{
 			get_byte_buffer(&rcv_byte_buffer,&byte_send);
 			//uartSendByte(byte_send);
-			receiveuartframe(byte_send, &uartframereceive, &enum_UartHandleState);
+			receiveuartframe(byte_send, &uartframereceive, valid_7E, convert_7D);
 		}
 	}
 }

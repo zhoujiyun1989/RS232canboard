@@ -43,3 +43,26 @@ Main.c (user_code):				switch((*puartframereceive).cmdhandle)
 Main.c (user_code):					id = (id<<8) | (*puartframereceive).data[i];
 Main.c (user_code):				msg_obj.dlc = (*puartframereceive).data[4];
 Main.c (user_code):					msg_obj.data[i] = (*puartframereceive).data[5+i];
+---- uartSendStr Matches (5 in 2 files) ----
+Canboard.htm (debuginflash):<LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uartSendStr
+Canboard.htm (debuginflash):<P><STRONG><a name="[4f]"></a>uartSendStr</STRONG> (Thumb, 26 bytes, Stack size 12 bytes, main.o(.text), UNUSED)
+Main.c (user_code):** Function name:       uartSendStr
+Main.c (user_code):void uartSendStr (uint8_t const *pucStr, uint32_t ulNum)
+Main.c (user_code):								uartSendStr("",24)
+---- eepromWrite Matches (16 in 4 files) ----
+Canboard.htm (debuginflash):__rt_entry_main &rArr; main &rArr; receiveuartframe &rArr; eepromWrite &rArr; dataCompare
+Canboard.htm (debuginflash):<LI>Call Chain = __rt_entry_main &rArr; main &rArr; receiveuartframe &rArr; eepromWrite &rArr; dataCompare
+Canboard.htm (debuginflash):<BR><BR>[Stack]<UL><LI>Max Depth = 576<LI>Call Chain = receiveuartframe &rArr; eepromWrite &rArr; dataCompare
+Canboard.htm (debuginflash):<BR>[Calls]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eepromWrite
+Canboard.htm (debuginflash):<BR><BR>[Stack]<UL><LI>Max Depth = 600<LI>Call Chain = main &rArr; receiveuartframe &rArr; eepromWrite &rArr; dataCompare
+Canboard.htm (debuginflash):<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eepromWrite
+Canboard.htm (debuginflash):<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eepromWrite
+Canboard.htm (debuginflash):<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eepromWrite
+Canboard.htm (debuginflash):<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eepromWrite
+Canboard.htm (debuginflash):<LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eepromWrite
+Canboard.htm (debuginflash):<P><STRONG><a name="[54]"></a>eepromWrite</STRONG> (Thumb, 126 bytes, Stack size 16 bytes, e2prom.o(.text))
+Canboard.htm (debuginflash):<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = eepromWrite &rArr; dataCompare
+E2PROM.c (user_code):** Function name:       eepromWrite
+E2PROM.c (user_code):uint8_t eepromWrite(uint8_t bank, uint8_t * src_addr)
+E2PROM.h (user_code):extern uint8_t eepromWrite(uint8_t bank, uint8_t * src_addr);
+Main.c (user_code):							ucErr = eepromWrite(0, data);
