@@ -10,7 +10,7 @@
 #include "CAN_API.h"
 #include "buffer.h"
 #include "E2PROM.h"
-	
+#include "data.h"	
 
 /*********************************************************************************************************
   flash读写，配置CAN总线
@@ -566,6 +566,7 @@ int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, 
 	}
 }
 
+
 /*********************************************************************************************************
 ** Function name:       main
 ** Descriptions:        CAN数据收发,直接调用LPC11C14片上CAN 固件API函数，默认波特率为500kbps。
@@ -592,6 +593,8 @@ int main(void)
 	uartInit();
 	CANInit();
 
+	ccpInit();
+	
 	/*while (1)
 	{
 		delay_ms(500);
@@ -602,6 +605,18 @@ int main(void)
 
 	while (1) 
 	{
+
+//CCP添加
+		//收到CCP数据帧
+		if(ccp_flag)
+		{
+			ccpCommand(receive_buffer);
+			ccpBackground();
+			ccp_flag = 0;
+		}
+		ccpSendCallBack();
+
+		
 		if(get_can_buffer(&rcv_can_buffer,&msg_obj))
 		{
 			uartframesend.start_symbol = 0x7E;

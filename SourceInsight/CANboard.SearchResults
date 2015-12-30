@@ -66,3 +66,73 @@ E2PROM.c (user_code):** Function name:       eepromWrite
 E2PROM.c (user_code):uint8_t eepromWrite(uint8_t bank, uint8_t * src_addr)
 E2PROM.h (user_code):extern uint8_t eepromWrite(uint8_t bank, uint8_t * src_addr);
 Main.c (user_code):							ucErr = eepromWrite(0, data);
+---- senduartframe Matches (6 in 2 files) ----
+Canboard.htm (debuginflash):<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;senduartframe
+Canboard.htm (debuginflash):<P><STRONG><a name="[52]"></a>senduartframe</STRONG> (Thumb, 236 bytes, Stack size 20 bytes, main.o(.text))
+Canboard.htm (debuginflash):<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = senduartframe
+Canboard.htm (debuginflash):<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;senduartframe
+Main.c (user_code):int senduartframe(struct uartframe uartframesendvar)
+Main.c (user_code):			senduartframe(uartframesend);
+---- ccpCommand Matches (8 in 5 files) ----
+Can_ccp.c (user_code):        ccpCommand((CCP_BYTEPTR)&c);
+Can_ccp.c (user_code):      ccpCommand(CCP_RX_DATA_PTR);
+Ccp.c (user_code):  t[0] - ccpCommand
+Ccp.c (user_code):      ccpCommand(CCP_RX_DATA_PTR);
+Ccp.c (user_code):void ccpCommand( CCP_BYTEPTR com ) {
+Ccp.h (user_code):extern void ccpCommand( CCP_BYTEPTR msg );
+Ccp_test.c (user_code):       ccpCommand(receive_buffer);                 // call ccpCommand
+Main.c (user_code):					ccpCommand(receive_buffer);
+---- ccp_flag Matches (3 in 1 files) ----
+Main.c (user_code):		if(ccp_flag)
+Main.c (user_code):				if(ccp_flag)
+Main.c (user_code):					ccp_flag = 0;
+---- ProgressCcpFlash Matches (2 in 1 files) ----
+Main.c (user_code):				if(ProgressCcpFlash==0xff)
+Main.c (user_code):					ProgressCcpFlash = 0;
+---- ccpBootInit Matches (3 in 2 files) ----
+Boot_can.c (user_code):void ccpBootInit (int cro_id, int dto_id)
+Boot_can.c (user_code):} /* ccpBootInit */
+Ccp_test.c (user_code):   ccpBootInit(CCP_CRO_ID, CCP_DTO_ID);            // set IDs
+---- g_ccp_cro_id Matches (3 in 1 files) ----
+Boot_can.c (user_code):unsigned int g_ccp_cro_id;              // global CRO-ID
+Boot_can.c (user_code):  g_ccp_cro_id = cro_id;
+Boot_can.c (user_code):  if (id == g_ccp_cro_id) return 1;            // if correctly received, return 1
+---- ccpBootReceiveCro Matches (3 in 2 files) ----
+Boot_can.c (user_code):int ccpBootReceiveCro (unsigned char *msg)
+Boot_can.c (user_code):} /* ccpBootReceiveCro */
+Ccp_test.c (user_code):     if (ccpBootReceiveCro(receive_buffer)) {      // if new CRO message received,
+---- SS_TMP_DISCONNECTED Matches (5 in 2 files) ----
+Ccp.c (user_code):          if (!(ccp.SessionStatus&SS_TMP_DISCONNECTED)) {
+Ccp.c (user_code):        ccp.SessionStatus &= ~SS_TMP_DISCONNECTED;
+Ccp.c (user_code):        ccp.SessionStatus |= SS_TMP_DISCONNECTED;
+Ccp.c (user_code):            ccp.SessionStatus |= SS_TMP_DISCONNECTED;
+Ccp.h (user_code):#define SS_TMP_DISCONNECTED   0x10
+---- CCP_STATION_ID Matches (4 in 2 files) ----
+Ccp.c (user_code):  CCP_ROM CCP_BYTE ccpStationId[] = CCP_STATION_ID;
+Ccppar.h (user_code):#define CCP_STATION_ID    "ECU00001"  /* Plug&Play station identification */
+Ccppar.h (user_code):  #undef CCP_STATION_ID
+Ccppar.h (user_code):  #define CCP_STATION_ID "CCPSIM"
+---- ccpStationId Matches (4 in 1 files) ----
+Ccp.c (user_code):  extern ROM CCP_BYTE ccpStationId[];
+Ccp.c (user_code):  CCP_ROM CCP_BYTE ccpStationId[] = CCP_STATION_ID;
+Ccp.c (user_code):          for(i=0;ccpStationId[i]!=0;i++) ;
+Ccp.c (user_code):          ccpSetMTA(0,(CCP_MTABYTEPTR)ccpStationId);
+---- EEPROM_START Matches (2 in 1 files) ----
+Can_ccp.c (user_code):  if (addr<EEPROM_START || addr>EEPROM_END) {
+Can_ccp.c (user_code):    if (addr<EEPROM_START || addr>EEPROM_END) {
+---- ccpGetPointer Matches (10 in 4 files) ----
+Can_ccp.c (user_code):ccpGetPointer
+Can_ccp.c (user_code):#ifndef ccpGetPointer
+Can_ccp.c (user_code):CCP_MTABYTEPTR ccpGetPointer( CCP_BYTE addr_ext, CCP_DWORD addr )
+Can_ccp.c (user_code):  return (CCP_DAQBYTEPTR)( ccpGetPointer(addr_ext,addr) - CCP_DAQ_BASE_ADDR );
+Ccp.c (user_code):            ccpSetMTA(mta,ccpGetPointer(addrExt,addr));
+Ccp.c (user_code):          ccpSetMTA(CCP_INTERNAL_MTA,ccpGetPointer(addrExt,addr));
+Ccp.c (user_code):              ccp.DaqListPtr->ptr = (CCP_DAQBYTEPTR)ccpGetPointer(writeDaqAddrExt,writeDaqAddr);
+Ccp.h (user_code):#if !defined(ccpGetPointer) || defined(__BOOT_H__) /* Not defined as macro */
+Ccp.h (user_code):  extern CCP_MTABYTEPTR ccpGetPointer( CCP_BYTE addr_ext, CCP_DWORD addr );
+ccp_can_interface.C (user_code):MTABYTEPTR ccpGetPointer( BYTE addr_ext, DWORD addr )        // get Pointer into
+---- ccpSetMTA Matches (4 in 1 files) ----
+Ccp.c (user_code):#define ccpSetMTA(n,p) ccp.MTA[n] = p;
+Ccp.c (user_code):          ccpSetMTA(0,(CCP_MTABYTEPTR)ccpStationId);
+Ccp.c (user_code):            ccpSetMTA(mta,ccpGetPointer(addrExt,addr));
+Ccp.c (user_code):          ccpSetMTA(CCP_INTERNAL_MTA,ccpGetPointer(addrExt,addr));
