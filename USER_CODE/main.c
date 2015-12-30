@@ -63,8 +63,11 @@ uint32_t     	GulNum;                                                    /* 串口
 struct uartframe uartframesend;
 struct uartframe uartframereceive;
 uint8_t	receivedata[13];
-uint8_t success_config[24] = {0x7E,0xFF,0x03,0xA0,0x21,0x00,0x0E,0x03,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x71,0xD5,0x7E}
-uint8_t fail_config[24] = {0x7E,0xFF,0x03,0xA0,0x21,0x00,0x0E,0x03,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x70,0xD4,0x7E}
+uint8_t success_config[24] = {0x7E,0xFF,0x03,0xA0,0x21,0x00,0x0E,0x03,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x71,0xD5,0x7E};
+uint8_t fail_config[24] = {0x7E,0xFF,0x03,0xA0,0x21,0x00,0x0E,0x03,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x70,0xD4,0x7E};
+uint8_t valid_7E = 0;
+uint8_t convert_7D = 0;
+
 
 /*********************************************************************************************************
 ** Function name:       delay_ms
@@ -307,7 +310,7 @@ void UART_IRQHandler (void)
 
 int senduartframe(struct uartframe uartframesendvar)
 {
-	uint8_t* p_temp = (uint8_t*)uartframesendvar;
+	uint8_t* p_temp = (uint8_t*)(&uartframesendvar);
 	int i = 0;
 	uartSendByte(0x7E);
 	//uartframe结构体总长度是24，去除首尾的7E
@@ -343,11 +346,11 @@ int senduartframe(struct uartframe uartframesendvar)
 	uartSendByte(0x7E);
 }
 
-int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, uint8_t valid_7E, uint8_t convert_7D)
+int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive)
 {
 	int i = 0;
 	int static j = 1;
-	uint8_t check[2] = 0;
+	uint8_t check[2] = {0,0};
 	
 	uint32_t id = 0;
 	uint32_t can_speed = 0;
@@ -358,11 +361,12 @@ int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, 
 	
 	switch(uartreceive)
 	{
-		case (7E):
+		case (0x7E):
 		{
-			if((j==23)&&(p_temp[0]==0x7E)&&(p_temp[1]==0xFF)&&(p_temp[2]==0x03)&&(p_temp[3]==0xA0)&&(p_temp[4]==0x21)&&(p_temp[5]==0x00)&&(p_temp[6]==0x0D))
+			if((j==23)&&(p_temp[0]==0x7E)&&(p_temp[1]==0xFF)&&(p_temp[2]==0x03)&&(p_temp[3]==0xA0)&&(p_temp[4]==0x21)&&(p_temp[5]==0x00)&&(p_temp[6]==0x0E))
 			{
-				for(i=1,i<21,i++)
+				//uartSendByte(0x90);
+				for(i=1;i<21;i++)
 				{
 					check[0] ^= p_temp[i];
 					check[1] += p_temp[i];
@@ -382,13 +386,15 @@ int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, 
 							//发送的ID是否带有帧信息
 							//id = (id&0x1FFFFFFF)|(TID_STD_EXT<<29)|(TID_DAT_RTR<<30);
 							//msg_obj.msgobj = 2;
-							msg_obj.mode_id = id;
-							msg_obj.dlc = p_temp[12];
-							for(i=0;i<msg_obj.dlc;i++)
+							msg_obj_send.msgobj = 4;
+							msg_obj_send.mode_id = id;
+							msg_obj_send.dlc = p_temp[12];
+							for(i=0;i<msg_obj_send.dlc;i++)
 							{
-								msg_obj.data[i] = p_temp[13+i];
+								msg_obj_send.data[i] = p_temp[13+i];
 							}
-							(*rom)->pCANAPI->can_transmit(&msg_obj);
+							(*rom)->pCANAPI->can_transmit(&msg_obj_send);
+							break;
 						}
 						case (2):
 						{
@@ -417,6 +423,7 @@ int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, 
 								   	}
 								}
 							}
+							
 							if(ucErr == 0)
 							{
 								uartSendByte(0x7E);
@@ -506,12 +513,13 @@ int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, 
 			break;
 		}
 		
-		case (7D):
+		case (0x7D):
 		{
 			if(valid_7E)
 				convert_7D = 0x01;
 			else
 				convert_7D = 0x00;
+			break;
 		}
 
 		default:
@@ -546,7 +554,7 @@ int receiveuartframe(uint8_t uartreceive, struct uartframe * puartframereceive, 
 				else
 				{
 					convert_7D = 0;
-					if((uartreceive>=0x21&&uartreceive<=0x7C)||(uartreceive>=0x7F&&uartreceive<=0xFF))
+					if(((uartreceive>=0x21&&uartreceive<=0x7C))||((uartreceive>=0x7F&&uartreceive<=0xFF)))
 						*(p_temp+(j++)) = uartreceive;
 					else
 						valid_7E = 0;
@@ -582,8 +590,7 @@ int main(void)
 	int i= 0;
 	uint32_t id = 0, msg_id = 0;
 	uint8_t	byte_send;
-	uint8_t	valid_7E = 0;
-	uint8_t	convert_7D = 0;
+
 	uint8_t	senddata[13];
 	
 	SystemInit();                                                     //初始化目标板，切勿删除
@@ -593,7 +600,7 @@ int main(void)
 	uartInit();
 	CANInit();
 
-	ccpInit();
+	//ccpInit();
 	
 	/*while (1)
 	{
@@ -605,7 +612,7 @@ int main(void)
 
 	while (1) 
 	{
-
+#if 0
 //CCP添加
 		//收到CCP数据帧
 		if(ccp_flag)
@@ -615,14 +622,17 @@ int main(void)
 			ccp_flag = 0;
 		}
 		ccpSendCallBack();
-
+#endif
 		
 		if(get_can_buffer(&rcv_can_buffer,&msg_obj))
 		{
 			uartframesend.start_symbol = 0x7E;
-			uartframesend.fixation = {0xFF,0x03};
-			uartframesend.protocol = {0xA0,0x21};
-			uartframesend.leng = {0x00,0x0D};
+			uartframesend.fixation[0] = 0xFF;
+			uartframesend.fixation[1] = 0x03;
+			uartframesend.protocol[0] = 0xA0;
+			uartframesend.protocol[1] = 0x21;
+			uartframesend.leng[0] = 0x00;
+			uartframesend.leng[1] = 0x0E;
 			uartframesend.cmd = 0x01;
 			//uartframesend.data = {};
 			//uartframesend.check = {};
@@ -649,10 +659,11 @@ int main(void)
 					senddata[5+msg_obj.dlc+i] = i;
 				}
 			}
-			uartframesend.data = &senddata[0];
+			for(i=0;i<13;i++)
+				uartframesend.data[i] = senddata[i];
 
-			uartframesend.check[0] = 0xFF^0x03^0xA0^0x21^0x00^0x0D^0x01;
-			uartframesend.check[1] = 0xFF+0x03+0xA0+0x21+0x00+0x0D+0x01;
+			uartframesend.check[0] = 0xFF^0x03^0xA0^0x21^0x00^0x0E^0x01;
+			uartframesend.check[1] = 0xFF+0x03+0xA0+0x21+0x00+0x0E+0x01;
 			for(i=0;i<13;i++)
 			{
 				uartframesend.check[0] ^= uartframesend.data[i];
@@ -695,7 +706,7 @@ int main(void)
 		{
 			get_byte_buffer(&rcv_byte_buffer,&byte_send);
 			//uartSendByte(byte_send);
-			receiveuartframe(byte_send, &uartframereceive, valid_7E, convert_7D);
+			receiveuartframe(byte_send, &uartframereceive);
 		}
 	}
 }

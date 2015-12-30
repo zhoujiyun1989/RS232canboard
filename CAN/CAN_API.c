@@ -37,11 +37,14 @@ const CAN_CALLBACKS callbacks = {
 *********************************************************************************************************/
 ROM **rom = (ROM**)0x1fff1ff8;                                  // 指向固件地址的指针
 CAN_MSG_OBJ  msg_obj;                                           // 定义CAN报文变量
+CAN_MSG_OBJ  msg_obj_send;
+
 CAN_MSG_OBJ  msg_obj_t;                                         //定义CAN报文变量
 CAN_MSG_OBJ  msg_cof1;                                           //定义CAN接收配置
 CAN_MSG_OBJ  msg_cof2;
 CAN_MSG_OBJ  msg_cof3;
 CAN_MSG_OBJ  msg_cof0;
+CAN_MSG_OBJ  ccp_msg_rec;
 
 
 
@@ -179,15 +182,16 @@ void CAN_rx(INT8U msg_obj_num)
 	msg_reback.msgobj = msg_obj_num;
 	//当接收到CCP数据帧的时候
 	(*rom)->pCANAPI->can_receive(&msg_reback);
-	
+	uartSendByte(msg_obj_num);
 	if(msg_reback.mode_id == BOOTLOAD_ID){
-	ccp_msg_rec.data = msg_reback.data;
+		for(i=0;i<ccp_msg_rec.dlc;i++){
+			ccp_msg_rec.data[i] = msg_reback.data[i];
+		}
 	ccp_msg_rec.dlc = msg_reback.dlc;
 	ccp_flag = 1;
 	}else{
 	put_can_buffer(&rcv_can_buffer,&msg_reback);
 	}
-	//uartSendByte(0x35);
 	#endif
 	
 	#if 0

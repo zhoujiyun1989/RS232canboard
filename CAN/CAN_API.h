@@ -11,6 +11,7 @@
 
 #include "stdint.h"
 #include "LPC11xx.h"
+#include "data.h"
 
 #define INT8U	uint8_t   
 #define INT16U	uint16_t  
@@ -192,6 +193,8 @@ extern INT8U CANOPEN_sdo_req(INT8U length_req, INT8U *req_ptr, INT8U *length_res
 extern const CAN_CALLBACKS callbacks ;                                  // CAN回调函数声明
 extern ROM **rom ;	                                                    // 指向固件地址的指针
 extern CAN_MSG_OBJ  msg_obj;  	                                        // 定义CAN报文变量
+extern CAN_MSG_OBJ  msg_obj_send;
+
 extern CAN_MSG_OBJ  msg_cof1;                                            //定义CAN接收配置
 extern CAN_MSG_OBJ  msg_cof2;
 extern CAN_MSG_OBJ  msg_cof3;

@@ -360,10 +360,11 @@ ARM Macro Assembler    Page 6
               00000200 
               00000200 
               00000000 
-Command Line: --debug --xref --cpu=Cortex-M0 --apcs=interwork --depend=.\DebugI
-nFlash\startup_LPC11xx.d -o.\DebugInFlash\startup_LPC11xx.o -IC:\Keil_v5\ARM\IN
-C -IC:\Keil_v5\ARM\INC\NXP\LPC11xx --predefine="__EVAL SETA 1" --list=.\DebugIn
-Flash\startup_LPC11xx.lst LPC11xx\startup\startup_LPC11xx.s
+Command Line: --debug --xref --cpu=Cortex-M0 --apcs=interwork --depend=.\debugi
+nflash\startup_lpc11xx.d -o.\debuginflash\startup_lpc11xx.o -ID:\Keil_v5\ARM\RV
+31\INC -ID:\Keil_v5\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include -ID:\Keil_v5\ARM\In
+c\NXP\LPC11xx --predefine="__EVAL SETA 1" --list=.\debuginflash\startup_lpc11xx
+.lst LPC11xx\startup\startup_LPC11xx.s
 
 
 
@@ -850,4 +851,4 @@ Symbol: __use_two_region_memory
       None
 Comment: __use_two_region_memory unused
 2 symbols
-377 symbols in table
+383 symbols in table

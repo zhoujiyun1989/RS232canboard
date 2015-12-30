@@ -1,1 +1,1 @@
-.\DebugInFlash\startup_LPC11xx.o: LPC11xx\startup\startup_LPC11xx.s
+.\debuginflash\startup_lpc11xx.o: LPC11xx\startup\startup_LPC11xx.s
