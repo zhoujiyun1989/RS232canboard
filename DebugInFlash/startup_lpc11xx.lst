@@ -362,7 +362,7 @@ ARM Macro Assembler    Page 6
               00000000 
 Command Line: --debug --xref --cpu=Cortex-M0 --apcs=interwork --depend=.\debugi
 nflash\startup_lpc11xx.d -o.\debuginflash\startup_lpc11xx.o -ID:\Keil_v5\ARM\RV
-31\INC -ID:\Keil_v5\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include -ID:\Keil_v5\ARM\In
+31\INC -Id:\Keil_v5\ARM\PACK\ARM\CMSIS\3.20.4\CMSIS\Include -ID:\Keil_v5\ARM\In
 c\NXP\LPC11xx --predefine="__EVAL SETA 1" --list=.\debuginflash\startup_lpc11xx
 .lst LPC11xx\startup\startup_LPC11xx.s
 

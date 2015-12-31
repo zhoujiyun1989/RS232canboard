@@ -7,16 +7,17 @@
 ### List of Objects: adding '".\debuginflash\main.o"'
 ### List of Objects: adding '".\debuginflash\buffer.o"'
 ### List of Objects: adding '".\debuginflash\e2prom.o"'
+### List of Objects: adding '".\debuginflash\data.o"'
 ### List of Objects: adding '".\debuginflash\can_api.o"'
 ### ADS-LD Command completed:
---cpu Cortex-M0 ".\debuginflash\core_cm0.o" ".\debuginflash\system_lpc11xx.o" ".\debuginflash\startup_lpc11xx.o" ".\debuginflash\main.o" ".\debuginflash\buffer.o" ".\debuginflash\e2prom.o" ".\debuginflash\can_api.o" --strict --scatter ".\LPC1100.sct" 
+--cpu Cortex-M0 ".\debuginflash\core_cm0.o" ".\debuginflash\system_lpc11xx.o" ".\debuginflash\startup_lpc11xx.o" ".\debuginflash\main.o" ".\debuginflash\buffer.o" ".\debuginflash\e2prom.o" ".\debuginflash\data.o" ".\debuginflash\can_api.o" --strict --scatter ".\LPC1100.sct" 
 --autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
 --info sizes --info totals --info unused --info veneers 
  --list ".\DebugInFlash\canboard.map" -o ".\DebugInFlash\canboard.axf"### Preparing Environment (PrepEnvAds)
 ### ADS-LD Output File: '.\DebugInFlash\canboard.axf'
 ### ADS-LD Command File: '.\DebugInFlash\canboard.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile '.\DebugInFlash\canboard.lnp', Handle=0x000005CC
+### Creating CmdFile '.\DebugInFlash\canboard.lnp', Handle=0x000002AC
 ### Writing '.lnp' file
 ### ADS-LD Command file '.\DebugInFlash\canboard.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

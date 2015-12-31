@@ -180,9 +180,10 @@ void CAN_rx(INT8U msg_obj_num)
 	#if 1
 	CAN_MSG_OBJ msg_reback;
 	msg_reback.msgobj = msg_obj_num;
+	//msg_reback.msgobj = 5;
 	//当接收到CCP数据帧的时候
 	(*rom)->pCANAPI->can_receive(&msg_reback);
-	uartSendByte(msg_obj_num);
+	//uartSendByte(msg_obj_num);
 	if(msg_reback.mode_id == BOOTLOAD_ID){
 		for(i=0;i<ccp_msg_rec.dlc;i++){
 			ccp_msg_rec.data[i] = msg_reback.data[i];
@@ -190,6 +191,7 @@ void CAN_rx(INT8U msg_obj_num)
 	ccp_msg_rec.dlc = msg_reback.dlc;
 	ccp_flag = 1;
 	}else{
+	//(*rom)->pCANAPI->can_transmit(&msg_reback);
 	put_can_buffer(&rcv_can_buffer,&msg_reback);
 	}
 	#endif

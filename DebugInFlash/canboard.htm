@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\DebugInFlash\canboard.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\DebugInFlash\canboard.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5040049: Last Updated: Thu Dec 31 01:18:33 2015
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5040049: Last Updated: Thu Dec 31 13:31:11 2015
 <BR><P>
 <H3>Maximum Stack Usage =        640 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -401,8 +401,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[50]"></a>uartSendByte</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, main.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_rx
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;receiveuartframe
+<BR><BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;receiveuartframe
 <LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;senduartframe
 <LI><a href="#[4f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uartSendStr
 </UL>
@@ -625,11 +624,10 @@ Global Symbols
 </UL>
 <P><STRONG><a name="[a3]"></a>GetCheckNum</STRONG> (Thumb, 46 bytes, Stack size 8 bytes, can_api.o(.text), UNUSED)
 
-<P><STRONG><a name="[2d]"></a>CAN_rx</STRONG> (Thumb, 94 bytes, Stack size 32 bytes, can_api.o(.text))
+<P><STRONG><a name="[2d]"></a>CAN_rx</STRONG> (Thumb, 88 bytes, Stack size 32 bytes, can_api.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = CAN_rx &rArr; put_can_buffer &rArr; is_can_buffer_full
 </UL>
 <BR>[Calls]<UL><LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;put_can_buffer
-<LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uartSendByte
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> can_api.o(.constdata)
 </UL>

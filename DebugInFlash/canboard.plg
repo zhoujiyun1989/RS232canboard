@@ -4,7 +4,7 @@
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
 F:\ZiLiao\GIT\CANboard\RS232canboard\canboard.uvproj
-Project File Date:  10/12/2015
+Project File Date:  12/31/2015
 
 <h2>Output:</h2>
 Build target 'DebugInFlash'
@@ -15,172 +15,60 @@ compiling main.c...
 USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
 USER_CODE\buffer.h:   #endif
 USER_CODE\buffer.h:         ^
-USER_CODE\main.c(280): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
-USER_CODE\main.c:                                       put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
-USER_CODE\main.c:                                                                         ^
 USER_CODE\main.c(289): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
 USER_CODE\main.c:                                       put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
 USER_CODE\main.c:                                                                         ^
-USER_CODE\main.c(322): warning:  #940-D: missing return statement at end of non-void function "senduartframe"
+USER_CODE\main.c(298): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
+USER_CODE\main.c:                                       put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
+USER_CODE\main.c:                                                                         ^
+USER_CODE\main.c(319): warning:  #186-D: pointless comparison of unsigned integer with zero
+USER_CODE\main.c:               if((*(p_temp+i)>=0x00)&&(*(p_temp+i)<=0x20))
+USER_CODE\main.c:                              ^
+USER_CODE\main.c(347): warning:  #940-D: missing return statement at end of non-void function "senduartframe"
 USER_CODE\main.c:   }
 USER_CODE\main.c:   ^
-USER_CODE\main.c(429): warning:  #940-D: missing return statement at end of non-void function "receiveuartframe"
+USER_CODE\main.c(433): warning:  #186-D: pointless comparison of unsigned integer with zero
+USER_CODE\main.c:                                                                       if((*(success_config+i)>=0x00)&&(*(success_config+i)<=0x20))
+USER_CODE\main.c:                                                                                              ^
+USER_CODE\main.c(468): warning:  #186-D: pointless comparison of unsigned integer with zero
+USER_CODE\main.c:                                                                       if((*(fail_config+i)>=0x00)&&(*(fail_config+i)<=0x20))
+USER_CODE\main.c:                                                                                           ^
+USER_CODE\main.c(532): warning:  #186-D: pointless comparison of unsigned integer with zero
+USER_CODE\main.c:                                       if(uartreceive>=0 && uartreceive<=0x20)
+USER_CODE\main.c:                                                     ^
+USER_CODE\main.c(575): warning:  #940-D: missing return statement at end of non-void function "receiveuartframe"
 USER_CODE\main.c:   }
 USER_CODE\main.c:   ^
-USER_CODE\main.c(529): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
+USER_CODE\main.c(666): warning:  #69-D: integer conversion resulted in truncation
+USER_CODE\main.c:                       uartframesend.check[1] = 0xFF+0x03+0xA0+0x21+0x00+0x0E+0x01;
+USER_CODE\main.c:                                                ^
+USER_CODE\main.c(707): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
 USER_CODE\main.c:                       get_byte_buffer(&rcv_byte_buffer,&byte_send);
 USER_CODE\main.c:                                                        ^
-USER_CODE\main.c(444): warning:  #177-D: variable "id" was declared but never referenced
+USER_CODE\main.c(591): warning:  #177-D: variable "id" was declared but never referenced
 USER_CODE\main.c:       uint32_t id = 0, msg_id = 0;
 USER_CODE\main.c:                ^
-USER_CODE\main.c: USER_CODE\main.c: 7 warnings, 0 errors
+USER_CODE\main.c: USER_CODE\main.c: 12 warnings, 0 errors
 compiling buffer.c...
 USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
 USER_CODE\buffer.h:   #endif
 USER_CODE\buffer.h:         ^
 USER_CODE\buffer.h: USER_CODE\buffer.c: 1 warning, 0 errors
 compiling E2PROM.c...
+compiling data.c...
 compiling CAN_API.c...
 .\USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
 .\USER_CODE\buffer.h:   #endif
 .\USER_CODE\buffer.h:         ^
-CAN\CAN_API.c(176): warning:  #177-D: variable "i" was declared but never referenced
-CAN\CAN_API.c:          int i = 0;
-CAN\CAN_API.c:              ^
+CAN\CAN_API.c(185): warning:  #223-D: function "uartSendByte" declared implicitly
+CAN\CAN_API.c:          uartSendByte(msg_obj_num);
+CAN\CAN_API.c:          ^
 CAN\CAN_API.c: CAN\CAN_API.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=4028 RO-data=256 RW-data=4196 ZI-data=1304  
+Program Size: Code=5952 RO-data=256 RW-data=4256 ZI-data=1420  
 FromELF: creating hex file...
 User command #2: fromelf.exe --bin -o .\DebugInFlash\canboard.bin .\DebugInFlash\canboard.axf
-".\DebugInFlash\canboard.axf" - 0 Error(s), 10 Warning(s).
-Build target 'DebugInFlash'
-compiling core_cm0.c...
-compiling system_LPC11xx.c...
-assembling startup_LPC11xx.s...
-compiling main.c...
-USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
-USER_CODE\buffer.h:   #endif
-USER_CODE\buffer.h:         ^
-USER_CODE\main.c(280): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
-USER_CODE\main.c:                                       put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
-USER_CODE\main.c:                                                                         ^
-USER_CODE\main.c(289): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
-USER_CODE\main.c:                                       put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
-USER_CODE\main.c:                                                                         ^
-USER_CODE\main.c(322): warning:  #940-D: missing return statement at end of non-void function "senduartframe"
-USER_CODE\main.c:   }
-USER_CODE\main.c:   ^
-USER_CODE\main.c(439): warning:  #223-D: function "eepromWrite" declared implicitly
-USER_CODE\main.c:                                               ucErr = eepromWrite(0, data);
-USER_CODE\main.c:                                                       ^
-USER_CODE\main.c(440): warning:  #223-D: function "eepromRead" declared implicitly
-USER_CODE\main.c:                                               eepromRead(0, temp, 256);
-USER_CODE\main.c:                                               ^
-USER_CODE\main.c(470): warning:  #940-D: missing return statement at end of non-void function "receiveuartframe"
-USER_CODE\main.c:   }
-USER_CODE\main.c:   ^
-USER_CODE\main.c(570): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
-USER_CODE\main.c:                       get_byte_buffer(&rcv_byte_buffer,&byte_send);
-USER_CODE\main.c:                                                        ^
-USER_CODE\main.c(485): warning:  #177-D: variable "id" was declared but never referenced
-USER_CODE\main.c:       uint32_t id = 0, msg_id = 0;
-USER_CODE\main.c:                ^
-USER_CODE\main.c: USER_CODE\main.c: 9 warnings, 0 errors
-compiling buffer.c...
-USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
-USER_CODE\buffer.h:   #endif
-USER_CODE\buffer.h:         ^
-USER_CODE\buffer.h: USER_CODE\buffer.c: 1 warning, 0 errors
-compiling E2PROM.c...
-compiling CAN_API.c...
-.\USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
-.\USER_CODE\buffer.h:   #endif
-.\USER_CODE\buffer.h:         ^
-CAN\CAN_API.c(176): warning:  #177-D: variable "i" was declared but never referenced
-CAN\CAN_API.c:          int i = 0;
-CAN\CAN_API.c:              ^
-CAN\CAN_API.c: CAN\CAN_API.c: 2 warnings, 0 errors
-linking...
-Program Size: Code=5512 RO-data=256 RW-data=4200 ZI-data=1364  
-FromELF: creating hex file...
-User command #2: fromelf.exe --bin -o .\DebugInFlash\canboard.bin .\DebugInFlash\canboard.axf
-".\DebugInFlash\canboard.axf" - 0 Error(s), 12 Warning(s).
-Load "F:\\ZiLiao\\GIT\\CANboard\\RS232canboard\\DebugInFlash\\canboard.AXF" 
-
-Error: Cannot load driver 'C:\Keil_v5\ARM\..\TKScope\ULP2ARM_TKSCP_DRV_ARM_for_AGDI.dll'.
-
-Possible Reasons:
- - Driver DLL could not be found in the specified path
- - Driver DLL requires additional DLL's which are not installed
- - Required Hardware Drivers are not installed
-Load "F:\\ZiLiao\\GIT\\CANboard\\RS232canboard\\DebugInFlash\\canboard.AXF" 
-
-Error: Cannot load driver 'C:\Keil_v5\ARM\..\TKScope\ULP2ARM_TKSCP_DRV_ARM_for_AGDI.dll'.
-
-Possible Reasons:
- - Driver DLL could not be found in the specified path
- - Driver DLL requires additional DLL's which are not installed
- - Required Hardware Drivers are not installed
-Build target 'DebugInFlash'
-compiling core_cm0.c...
-compiling system_LPC11xx.c...
-assembling startup_LPC11xx.s...
-compiling main.c...
-USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
-USER_CODE\buffer.h:   #endif
-USER_CODE\buffer.h:         ^
-USER_CODE\main.c(280): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
-USER_CODE\main.c:                                       put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
-USER_CODE\main.c:                                                                         ^
-USER_CODE\main.c(289): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
-USER_CODE\main.c:                                       put_byte_buffer(&rcv_byte_buffer, &GucRcvBuf[GulNum]);
-USER_CODE\main.c:                                                                         ^
-USER_CODE\main.c(322): warning:  #940-D: missing return statement at end of non-void function "senduartframe"
-USER_CODE\main.c:   }
-USER_CODE\main.c:   ^
-USER_CODE\main.c(439): warning:  #223-D: function "eepromWrite" declared implicitly
-USER_CODE\main.c:                                               ucErr = eepromWrite(0, data);
-USER_CODE\main.c:                                                       ^
-USER_CODE\main.c(440): warning:  #223-D: function "eepromRead" declared implicitly
-USER_CODE\main.c:                                               eepromRead(0, temp, 256);
-USER_CODE\main.c:                                               ^
-USER_CODE\main.c(470): warning:  #940-D: missing return statement at end of non-void function "receiveuartframe"
-USER_CODE\main.c:   }
-USER_CODE\main.c:   ^
-USER_CODE\main.c(570): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *"
-USER_CODE\main.c:                       get_byte_buffer(&rcv_byte_buffer,&byte_send);
-USER_CODE\main.c:                                                        ^
-USER_CODE\main.c(485): warning:  #177-D: variable "id" was declared but never referenced
-USER_CODE\main.c:       uint32_t id = 0, msg_id = 0;
-USER_CODE\main.c:                ^
-USER_CODE\main.c: USER_CODE\main.c: 9 warnings, 0 errors
-compiling buffer.c...
-USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
-USER_CODE\buffer.h:   #endif
-USER_CODE\buffer.h:         ^
-USER_CODE\buffer.h: USER_CODE\buffer.c: 1 warning, 0 errors
-compiling E2PROM.c...
-compiling CAN_API.c...
-.\USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
-.\USER_CODE\buffer.h:   #endif
-.\USER_CODE\buffer.h:         ^
-CAN\CAN_API.c(176): warning:  #177-D: variable "i" was declared but never referenced
-CAN\CAN_API.c:          int i = 0;
-CAN\CAN_API.c:              ^
-CAN\CAN_API.c: CAN\CAN_API.c: 2 warnings, 0 errors
-linking...
-Program Size: Code=5512 RO-data=256 RW-data=4200 ZI-data=1364  
-FromELF: creating hex file...
-User command #2: fromelf.exe --bin -o .\DebugInFlash\canboard.bin .\DebugInFlash\canboard.axf
-".\DebugInFlash\canboard.axf" - 0 Error(s), 12 Warning(s).
-Load "F:\\ZiLiao\\GIT\\CANboard\\RS232canboard\\DebugInFlash\\canboard.AXF" 
-
-Error: Cannot load driver 'C:\Keil_v5\ARM\..\TKScope\ULP2ARM_TKSCP_DRV_ARM_for_AGDI.dll'.
-
-Possible Reasons:
- - Driver DLL could not be found in the specified path
- - Driver DLL requires additional DLL's which are not installed
- - Required Hardware Drivers are not installed
+".\DebugInFlash\canboard.axf" - 0 Error(s), 15 Warning(s).
 Load "F:\\ZiLiao\\GIT\\CANboard\\RS232canboard\\DebugInFlash\\canboard.AXF" 
 
 Error: Cannot load driver 'C:\Keil_v5\ARM\..\TKScope\ULP2ARM_TKSCP_DRV_ARM_for_AGDI.dll'.

@@ -3,8 +3,8 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
-C:\Users\jiyun\Desktop\CANboard\RS232canboard\canboard.uvproj
-Project File Date:  12/30/2015
+F:\ZiLiao\GIT\CANboard\RS232canboard\canboard.uvproj
+Project File Date:  12/31/2015
 
 <h2>Output:</h2>
 Rebuild target 'DebugInFlash'
@@ -46,57 +46,18 @@ compiling data.c...
 compiling CAN_API.c...
 .\USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
   #endif
-CAN\CAN_API.c(185): warning:  #223-D: function "uartSendByte" declared implicitly
-        uartSendByte(msg_obj_num);
-CAN\CAN_API.c: 2 warnings, 0 errors
+CAN\CAN_API.c: 1 warning, 0 errors
 linking...
-Program Size: Code=5976 RO-data=256 RW-data=4260 ZI-data=1416  
+Program Size: Code=5968 RO-data=256 RW-data=4260 ZI-data=1416  
 FromELF: creating hex file...
 After Build - User command #2: fromelf.exe --bin -o .\DebugInFlash\canboard.bin .\DebugInFlash\canboard.axf
-".\DebugInFlash\canboard.axf" - 0 Error(s), 15 Warning(s).
+".\DebugInFlash\canboard.axf" - 0 Error(s), 14 Warning(s).
+Load "F:\\ZiLiao\\GIT\\CANboard\\RS232canboard\\DebugInFlash\\canboard.axf" 
+Flash Write Done: 6376 bytes programmed.
+Flash Verify Done: 6376 bytes verified.
 </pre>
 </body>
 </html>
-sktop\\CANboard\\RS232canboard\\DebugInFlash\\canboard.axf" 
-Flash Write Done: 6384 bytes programmed.
-Flash Verify Done: 6384 bytes verified.
-\main.c(642): error:  #28: expression must have a constant value
-                        msg_id = (msg_obj.mode_id&0x1fffffff)|((msg_obj.msgobj)<<29);
-USER_CODE\main.c(642): error:  #28: expression must have a constant value
-                        msg_id = (msg_obj.mode_id&0x1fffffff)|((msg_obj.msgobj)<<29);
-USER_CODE\main.c(643): error:  #169: expected a declaration
-                        for(i=0;i<4;i++)
-USER_CODE\main.c(647): warning:  #12-D: parsing restarts here after previous syntax error
-                        senddata[4] = msg_obj.dlc;
-USER_CODE\main.c(649): error:  #169: expected a declaration
-                        for(i=0;i<msg_obj.dlc;i++)
-USER_CODE\main.c(662): warning:  #12-D: parsing restarts here after previous syntax error
-                                uartframesend.data[i] = senddata[i];
-USER_CODE\main.c(664): error:  #77-D: this declaration has no storage class or type specifier
-                        uartframesend.check[0] = 0xFF^0x03^0xA0^0x21^0x00^0x0E^0x01;
-USER_CODE\main.c(664): error:  #65: expected a ";"
-                        uartframesend.check[0] = 0xFF^0x03^0xA0^0x21^0x00^0x0E^0x01;
-USER_CODE\main.c(665): error:  #77-D: this declaration has no storage class or type specifier
-                        uartframesend.check[1] = 0xFF+0x03+0xA0+0x21+0x00+0x0E+0x01;
-USER_CODE\main.c(665): error:  #65: expected a ";"
-                        uartframesend.check[1] = 0xFF+0x03+0xA0+0x21+0x00+0x0E+0x01;
-USER_CODE\main.c(666): error:  #169: expected a declaration
-                        for(i=0;i<13;i++)
-USER_CODE\main.c(672): warning:  #12-D: parsing restarts here after previous syntax error
-                        senduartframe(uartframesend);
-USER_CODE\main.c(673): error:  #169: expected a declaration
-                }
-USER_CODE\main.c(714): warning: At end of source:  #12-D: parsing restarts here after previous syntax error
-USER_CODE\main.c: 15 warnings, 18 errors
-compiling buffer.c...
-USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
-  #endif
-USER_CODE\buffer.c: 1 warning, 0 errors
-compiling E2PROM.c...
-compiling data.c...
-compiling CAN_API.c...
-.\USER_CODE\buffer.h(63): warning:  #1-D: last line of file ends without a newline
-  #endif
-CAN\CAN_API.c: 1 warning, 0 errors
-".\DebugInFlash\canboard.axf" - 18 Error(s), 17 Warning(s).
-Target not created
+ard.axf" 
+Flash Write Done: 6388 bytes programmed.
+Flash Verify Done: 6388 bytes verified.

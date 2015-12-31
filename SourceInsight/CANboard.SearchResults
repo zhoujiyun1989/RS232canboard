@@ -1,11 +1,47 @@
----- msg_obj_send Matches (7 in 2 files) ----
-CAN_API.h (can):extern CAN_MSG_OBJ  msg_obj_send;
-Main.c (user_code):							msg_obj_send.msgobj = 4;
-Main.c (user_code):							msg_obj_send.mode_id = id;
-Main.c (user_code):							msg_obj_send.dlc = p_temp[12];
-Main.c (user_code):							for(i=0;i<msg_obj_send.dlc;i++)
-Main.c (user_code):								msg_obj_send.data[i] = p_temp[13+i];
-Main.c (user_code):							(*rom)->pCANAPI->can_transmit(&msg_obj_send);
----- msg_obj_send Search Errors Encountered (1) ----
+---- uartSendByte Matches (43 in 3 files) ----
+Canboard.htm (debuginflash):<P><STRONG><a name="[50]"></a>uartSendByte</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, main.o(.text))
+Canboard.htm (debuginflash):<BR><BR>[Calls]<UL><LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uartSendByte
+Canboard.htm (debuginflash):<BR>[Calls]<UL><LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uartSendByte
+Canboard.htm (debuginflash):<LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uartSendByte
+Canboard.htm (debuginflash):<LI><a href="#[50]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uartSendByte
+CAN_API.c (can):	uartSendByte(msg_obj_num);
+CAN_API.c (can):	uartSendByte(msg_obj_num);
+CAN_API.c (can):	uartSendByte((char)(msg_obj.mode_id >> 8*0));
+CAN_API.c (can):	uartSendByte((char)(msg_obj.mode_id >> 8*1));
+CAN_API.c (can):	uartSendByte((char)(msg_obj.mode_id >> 8*2));
+CAN_API.c (can):	uartSendByte((char)(msg_obj.mode_id >> 8*3));
+Main.c (user_code):** Function name:       uartSendByte
+Main.c (user_code):void uartSendByte (uint8_t ucDat)
+Main.c (user_code):        uartSendByte (*pucStr++);
+Main.c (user_code):	uartSendByte(0x7E);
+Main.c (user_code):			uartSendByte(0x7D);
+Main.c (user_code):			uartSendByte(*(p_temp+i));
+Main.c (user_code):					uartSendByte(0x7D);
+Main.c (user_code):					uartSendByte(0x5E);
+Main.c (user_code):					uartSendByte(0x7D);
+Main.c (user_code):					uartSendByte(0x5D);
+Main.c (user_code):					uartSendByte(*(p_temp+i));
+Main.c (user_code):	uartSendByte(0x7E);
+Main.c (user_code):				//uartSendByte(0x90);
+Main.c (user_code):								uartSendByte(0x7E);
+Main.c (user_code):										uartSendByte(0x7D);
+Main.c (user_code):										uartSendByte(*(success_config+i));
+Main.c (user_code):												uartSendByte(0x7D);
+Main.c (user_code):												uartSendByte(0x5E);
+Main.c (user_code):												uartSendByte(0x7D);
+Main.c (user_code):												uartSendByte(0x5D);
+Main.c (user_code):												uartSendByte(*(success_config+i));
+Main.c (user_code):								uartSendByte(0x7E);
+Main.c (user_code):								uartSendByte(0x7E);
+Main.c (user_code):										uartSendByte(0x7D);
+Main.c (user_code):										uartSendByte(*(fail_config+i));
+Main.c (user_code):												uartSendByte(0x7D);
+Main.c (user_code):												uartSendByte(0x5E);
+Main.c (user_code):												uartSendByte(0x7D);
+Main.c (user_code):												uartSendByte(0x5D);
+Main.c (user_code):												uartSendByte(*(fail_config+i));
+Main.c (user_code):								uartSendByte(0x7E);
+Main.c (user_code):			//uartSendByte(byte_send);
+---- uartSendByte Search Errors Encountered (1) ----
 The following 1 files could not be processed:
-C:\Users\jiyun\Desktop\CANboard\RS232canboard\DebugInFlash\canboard.build_log.htm : File could not be opened.
+F:\ZiLiao\GIT\CANboard\RS232canboard\DebugInFlash\canboard.build_log.htm : File could not be opened.
