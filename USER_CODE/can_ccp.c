@@ -244,10 +244,12 @@ CCP_BYTE ccpDisableNormalOperation( CCP_MTABYTEPTR a, CCP_WORD s ) {
   /* Size is s bytes */
 
   /* ... */
-
+  //disable_interrupt();                  // disables all interrupts, e.g. TIMER_0
+	zyIrqDisable();							//在下载之前，禁止所有中断
   // return 0; // Refused
   return 1; // Ok
 }
+
 
 #endif
 

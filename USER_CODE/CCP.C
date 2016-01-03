@@ -1238,6 +1238,8 @@ void ccpCommand( CCP_BYTEPTR com ) {
 
       #endif /* CCP_CHECKSUM */
 
+
+		//这里不需要插入执行代码，直接修改flash
       /* Flash Programming Kernel Download */
       #ifdef CCP_BOOTLOADER_DOWNLOAD
 
